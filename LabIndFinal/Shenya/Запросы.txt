@@ -1,0 +1,368 @@
+Select * from Авторы
+order by [Фамилия автора]
+
+Select * from Авторы
+order by [Фамилия автора] desc,
+[Имя автора] desc
+
+select distinct 
+'Заказчик ' + [Фамилия заказчика] + ' ' + [Имя заказчика] + ' Проживает по адресу ' + [Адрес заказчика]
+from Заказчики
+
+Select top 30 percent * from Заказы
+
+Select top 5 * from Книги
+
+Select * from [Книги-заказы] order by ИД desc offset 1 rows
+fetch next 6 rows only
+
+Select [Название книги], [Количество страниц] into TestTask from Книги
+Select * from TestTask
+
+Select * from Заказы
+where [Количество экземпляров] > 10 and [Статус заказа] = 'Активен'
+
+Select * from Книги
+where [Розничная цена] > 150
+
+Select * from Книги
+where [Год начала издания] > 2005
+
+Select * from Книги
+where [Дата тиража] < '2005-12-12'
+
+exec sp_rename 'Заказы', 'НовыеЗаказы'
+
+alter table Заказы
+add [НДС(%)] int
+
+alter table Заказы
+add constraint CK_NDS check ([НДС(%)] < 100) 
+
+Select
+count([Розничная цена])
+from Книги
+
+Select [Код заказа], avg([Количество экземпляров])
+from Заказы
+group by [Код заказа]
+
+Select [Код заказа], avg([Количество экземпляров])
+from Заказы
+group by [Код заказа]
+having avg([Количество экземпляров]) > 5
+
+Select [Код книги], count([Год начала издания])
+from Книги
+group by [Код книги]
+having max([Год начала издания]) > 2005
+
+Select [Количество страниц], [Розничная цена] from Книги
+group by rollup ([Количество страниц], [Розничная цена])
+
+Select [Количество страниц], [Розничная цена] from Книги
+group by cube ([Количество страниц], [Розничная цена])
+
+Select [Количество страниц], [Розничная цена] from Книги
+group by grouping sets ([Количество страниц], [Розничная цена])
+
+Select [Название книги], [Количество страниц], avg([Розничная цена]) over(partition by [Количество страниц]) from Книги
+
+use Tsepyashchuk_014301
+Select *
+from (
+Select * from Заказы)
+as SourceTable
+pivot 
+(avg([Количество экземпляров]) for [Статус заказа] in ([Активен], [Завершен]))
+as PivotTable
+
+Select [Статус заказа]
+from (
+Select [Код заказа], [Статус заказа], [Срок заказа] from Заказы)
+as SourceTable
+unpivot 
+([Код заказчика] for [Количество экземпляров] in ([Код заказа], [Срок заказа]))
+as UnPivotTable
+
+Select e.[Код заказчика], d.[Количество экземпляров] From [Заказы] d
+inner join [Заказчики] e on e.[Код заказчика] = d.[Код заказчика]
+
+Select e.[Наименование категории], d.[Название книги] from Книги d
+inner join Категории e on e.[Код категории] = d.[Код категории]
+where d.[Количество страниц] < 200
+
+Select d.[Фамилия автора], e.[Название книги] From [Авторы] d
+left join [Авторы-Книги] c on c.[Код автора] = d.[Код автора]
+left join [Книги] e on e.[Код книги] = c.[Код книги]
+
+Select e.[Дата заказа], e.[Статус заказа], d.[Название книги] from Книги d
+left join [Книги-заказы] c on c.[Код книги] = d.[Код книги]
+left join Заказы e on e.[Код заказа] = c.[Код заказа]
+
+Select e.[Код заказчика], d.[Количество экземпляров] From [Заказы] d
+right join [Заказчики] e on e.[Код заказчика] = d.[Код заказчика]
+order by [Количество экземпляров]
+
+Select e.[Наименование категории], d.[Название книги] from Книги d
+right join Категории e on e.[Код категории] = d.[Код категории]
+where d.[Количество страниц] < 200
+
+Select d.[Фамилия автора], e.[Название книги] From [Авторы] d
+full outer join [Авторы-Книги] c on c.[Код автора] = d.[Код автора]
+full outer join [Книги] e on e.[Код книги] = c.[Код книги]
+
+Select e.[Дата заказа], e.[Статус заказа], d.[Название книги] from Книги d
+full outer join [Книги-заказы] c on c.[Код книги] = d.[Код книги]
+full outer join Заказы e on e.[Код заказа] = c.[Код заказа]
+
+Select e.[Код заказчика], d.[Количество экземпляров] From [Заказы] d
+cross join [Заказчики] e
+order by [Количество экземпляров]
+
+Select e.[Наименование категории], d.[Название книги] from Книги d
+cross join Категории e
+
+Select [Код заказа] from Заказы
+where [Количество экземпляров] > 5
+intersect
+Select e.[Код заказа] from Заказы e
+inner join Заказчики d on d.[Код заказчика] = e.[Код заказчика]
+where d.[Фамилия заказчика] = 'OSername1'
+
+Select [Фамилия автора] from Авторы
+intersect
+select e.[Фамилия автора] from Авторы e
+inner join [Авторы-Книги] c on c.[Код автора] = e.[Код автора]
+inner join [Книги] d on d.[Код книги] = c.[Код книги]
+where d.[Название книги] = 'BookName1'
+
+Select [Код заказа] from Заказы
+where [Количество экземпляров] > 5
+except
+Select e.[Код заказа] from Заказы e
+inner join Заказчики d on d.[Код заказчика] = e.[Код заказчика]
+where d.[Фамилия заказчика] = 'OSername1'
+
+Select [Фамилия автора] from Авторы
+excepts
+select e.[Фамилия автора] from Авторы e
+inner join [Авторы-Книги] c on c.[Код автора] = e.[Код автора]
+inner join [Книги] d on d.[Код книги] = c.[Код книги]
+where d.[Название книги] = 'BookName1'
+
+Select [Название книги] from Книги e
+join Категории c on c.[Код категории] = e.[Код категории]
+where c.[Наименование категории] in ('Çategory1', 'Category2')
+
+Select [Название книги] from Книги
+where [Розничная цена] > Any (
+Select e.[Розничная цена] from Книги e 
+inner join [Авторы-Книги] c on c.[Код книги] = e.[Код книги]
+inner join Авторы d on d.[Код автора] = c.[Код автора]
+where d.[Код автора] > 1)
+
+Select [Дата заказа] from Заказы
+where [Количество экземпляров] < All (
+Select e.[Количество экземпляров] from Книги e 
+inner join [Книги-заказы] c on c.[Код книги] = e.[Код книги]
+inner join Заказы d on d.[Код заказа] = c.[Код заказа]
+where d.[Статус заказа] = 'Активен')
+
+Select d.[Фамилия автора], d.[Имя автора] from Авторы d
+join [Авторы-Книги] c on c.[Код автора] = d.[Код автора]
+join Книги e on e.[Код книги] = c.[Код книги]
+where EXISTS (Select 1 from Заказы where [Количество экземпляров] > 10)
+
+Select Concat([Фамилия автора], ' ', [Имя автора], ' ', [Отчество автора]) as ФИО from Авторы
+
+Select Upper([Название книги]) from  [Книги]
+
+Select Len([Адрес заказчика]) from [Заказчики]
+
+Select Replicate([Фамилия автора], 3) From Авторы
+
+Select [Фамилия автора], Count([Код автора]) from Авторы
+group by [Фамилия автора]
+
+Select [Название книги], Round([Розничная цена], 0) from Книги
+
+Select AVG([Розничная цена]) as [Средняя цена книги] from Книги
+
+Select *, Datediff(YEAR, '2000-06-10', [Дата тиража]) as Duration from [Книги]
+where datediff(YEAR, '2000-06-10', [Дата тиража]) > 1
+
+go
+Create view ClientOrderView as
+select e.[Фамилия заказчика] + ' ' +  e.[Имя заказчика] + ' ' + e.[Отчество заказчика] as FIO, d.[Дата заказа], d.[Количество экземпляров]
+from Заказчики e
+inner join Заказы d on d.[Код заказчика] = e.[Код заказчика]
+go
+Select * from ClientOrderView
+go
+
+go
+create view ClientImportantInfo as
+Select [Адрес заказчика], [Телефон заказчика] from Заказчики
+go
+Select * from ClientImportantInfo
+
+go
+create view BookAuthor as
+Select e.[Название книги], d.[Фамилия автора] from Авторы d
+inner join [Авторы-Книги] c on c.[Код автора] = d.[Код автора]
+inner join Книги e on e.[Код книги] = c.[Код книги]
+go
+Select * from BookAuthor
+
+go
+create view CategoryBook as
+Select e.[Наименование категории], d.[Название книги] from Книги d
+inner join Категории e on e.[Код категории] = d.[Код категории]
+go
+Select * from CategoryBook
+
+go
+create view OrderBook as
+Select e.[Код заказа], d.[Название книги] from Книги d
+inner join [Книги-заказы] c on c.[Код книги] = d.[Код книги]
+inner join Заказы e on e.[Код заказа] = c.[Код заказа]
+go
+Select * from OrderBook
+
+declare @ClientsTable Table (ClientID int, ClientName nvarchar(100), Phone nvarchar(50));
+insert into @ClientsTable (ClientID, ClientName, Phone)
+select [Код заказчика], [Фамилия заказчика] + ' ' + [Имя заказчика] + ' ' + [Отчество заказчика], [Телефон заказчика] from Заказчики
+select * from @ClientsTable
+
+Create Table #LocalTempClient (ClientID int, ClientName nvarchar(100), Phone nvarchar(50));
+insert into #LocalTempClient (ClientID, ClientName, Phone)
+select [Код заказчика], [Фамилия заказчика] + ' ' + [Имя заказчика] + ' ' + [Отчество заказчика], [Телефон заказчика] from Заказчики
+select * from #LocalTempClient
+drop table #LocalTempClient
+
+Create Table ##GlobalTempClient (ClientID int, ClientName nvarchar(100), Phone nvarchar(50));
+insert into ##GlobalTempClient (ClientID, ClientName, Phone)
+select [Код заказчика], [Фамилия заказчика] + ' ' + [Имя заказчика] + ' ' + [Отчество заказчика], [Телефон заказчика] from Заказчики
+select * from ##GlobalTempClient
+drop table ##GlobalTempClient
+
+With [Обобщенные клиенты] ([Обобщенное Имя], [Обобщенная Фамилия]) as (
+Select e.[Имя заказчика], e.[Фамилия заказчика] from Заказчики e
+inner join Заказы d on d.[Код заказчика] = e.[Код заказчика] 
+where d.[Количество экземпляров] > 10)
+Select * from [Обобщенные клиенты]
+
+go
+create procedure GetOrdersByClients
+@ClientCode int
+as
+begin
+select e.[Код заказа], e.[Дата заказа], e.[Количество экземпляров], d.[Фамилия заказчика] + ' ' + d.[Имя заказчика] from Заказы e
+inner join Заказчики d on d.[Код заказчика] = e.[Код заказчика]
+where d.[Код заказчика] = @ClientCode;
+end
+go
+exec GetOrdersByClients @ClientCode = 1;go
+create procedure GetOrdersByClients
+@ClientCode int
+as
+begin
+select e.[Код заказа], e.[Дата заказа], e.[Количество экземпляров], d.[Фамилия заказчика] + ' ' + d.[Имя заказчика] from Заказы e
+inner join Заказчики d on d.[Код заказчика] = e.[Код заказчика]
+where d.[Код заказчика] = @ClientCode;
+end
+go
+exec GetOrdersByClients @ClientCode = 1;
+
+go
+create procedure GetAvgBookPrice
+@AvgPrice decimal output
+as
+begin
+select @AvgPrice = avg([Розничная цена])
+from Книги
+end
+go
+declare @APrice decimal;
+exec GetAvgBookPrice @AvgPrice = @APrice output
+select @APrice as AveragePrice
+
+go
+create function GetFullName (@AuthorID int)
+returns nvarchar(100)
+as
+begin
+declare @FullName nvarchar(100)
+select @FullName = [Фамилия автора] + ' ' + [Имя автора] + ' ' + isnull([Отчество автора], '')
+from Авторы
+where [Код автора] = @AuthorID
+return @FullName
+end
+go
+select dbo.GetFullName(1) as ФИО
+
+go
+create function GetClientOrders (@ClientID int)
+returns table
+as
+return
+select e.[Код заказа], e.[Дата заказа], e.[Количество экземпляров] from Заказы e
+inner join Заказчики d on d.[Код заказчика] = e.[Код заказчика]
+where d.[Код заказчика] = @ClientID
+go
+select * from dbo.GetClientOrders(2);
+
+create table NewBookPriceAudit (
+Id int primary key Identity,
+BookId int,
+OldDate date,
+NewDate date,
+UpdateDate datetime )
+go
+create trigger trg_AfterDateUpdate
+on [Книги]
+after update
+as
+begin
+if (update([Дата тиража]))
+begin
+insert into NewBookPriceAudit (BookId, OldDate, NewDate, UpdateDate)
+select e.[Код книги], d.[Дата тиража], e.[Дата тиража], getdate()
+from inserted e
+inner join deleted d on d.[Код книги] = e.[Код книги]
+end
+end
+go
+Select * from NewBookPriceAudit
+update [Книги] set [Дата тиража] = '2020-11-11'
+where [Код книги] = 1
+select * from NewBookPriceAudit
+
+go 
+create trigger trg_InseteadOfDeleteBook
+on [Книги]
+instead of Delete
+as
+begin
+declare @BookId int
+select @BookId = [Код книги] from deleted
+if not exists (select * from [Книги-заказы] e where e.[Код книги] = @BookId)
+begin
+delete from [Книги] where [Код книги] = @BookId
+end
+else
+begin
+RaisError('Невозможно удалить кнгу, так как на неё оформлен и не оплачен заказ', 16, 1)
+end
+end
+go
+Delete from [Книги] where [Код книги] = 1
+
+Select e.[Код заказа], e.[Статус заказа] from Заказы e
+UNION
+Select [Код заказчика], [Фамилия заказчика] from Заказчики
+
+Select e.[Код автора], e.[Фамилия автора] from Авторы e
+Union
+Select [Код книги], [Название книги] from Книги

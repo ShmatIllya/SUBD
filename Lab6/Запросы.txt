@@ -1,0 +1,150 @@
+//===========================Запросы============================
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent,
+round(cast(KolNaz as float)*100 /
+( Select Sum (KolNaz) from Tabl_Kontinent$), 3)
+as Процент
+from Tabl_Kontinent$
+Order by Процент desc
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$
+where KolNaz > 
+( Select Avg(KolNaz) from Tabl_Kontinent$)
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from ( Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$
+where Nazvanie = 'Африка') G
+where KolNaz > 5000000
+
+select Nazvanie, Stolica, PL, KolNaz, Kontinent, Round(cast (KolNaz as float) * 100 / 
+(Select sum(KolNaz)
+from Tabl_Kontinent$ B
+where A.Kontinent = B.Kontinent ), 3) as Процент
+from Tabl_Kontinent$ A
+order by Процент desc
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$ A
+where KolNaz > 
+(Select Avg(KolNaz) from Tabl_Kontinent$ B
+where B.Kontinent = A.Kontinent)
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$
+where Kontinent in 
+(Select Kontinent
+from Tabl_Kontinent$
+group by Kontinent having avg(KolNaz) >
+(Select avg(KolNaz) from Tabl_Kontinent$ ))
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent 
+from Tabl_Kontinent$ 
+where Kontinent = 'Азия' and KolNaz > all 
+(Select KolNaz from Tabl_Kontinent$
+where Kontinent = 'Европа')
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent 
+from Tabl_Kontinent$ 
+where Kontinent = 'Европа' and KolNaz > any 
+(Select KolNaZ from Tabl_Kontinent$
+where Kontinent = 'Южная Америка')
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent 
+from Tabl_Kontinent$ 
+where Kontinent = 'Африка' and exists
+(Select * from Tabl_Kontinent$
+where Kontinent = 'Африка' and KolNaz > 100000000)
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent 
+from Tabl_Kontinent$ 
+where Kontinent = 
+(Select Kontinent from Tabl_Kontinent$
+where Nazvanie = 'Ангола' )
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent 
+from Tabl_Kontinent$ 
+where KolNaz !> 
+(Select KolNaz from Tabl_Kontinent$
+where Nazvanie = 'Ангола' )
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent 
+from Tabl_Kontinent$ 
+where KolNaz = 
+(Select max(Мин_Нас) from
+(select min(KolNaz) as Мин_Нас from Tabl_Kontinent$
+group by Kontinent) G)
+
+//=========================Самостоятельная работа========================
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent,
+PL/ sum(PL) over () * 100 as Процентное_Соотношение
+from Tabl_Kontinent$ 
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$ 
+where KolNaz / PL > (Select avg(KolNaz / PL)
+from Tabl_Kontinent$)
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$ 
+where Kontinent = 'Европа' and KolNaz < 5000000
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent,
+(cast(PL as float) / Sum(PL) over (partition by Kontinent)) * 100
+as Соотношение_Площадей
+from Tabl_Kontinent$
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$
+where PL > (Select avg(PL) from Tabl_Kontinent$
+where Kontinent = Tabl_Kontinent$.Kontinent)
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$
+where KolNaz / PL > (Select avg(KolNaz) / avg(PL)
+from Tabl_Kontinent$)
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$
+where Kontinent = 'Южная Америка' and KolNaz >
+(Select max(KolNaz) from Tabl_Kontinent$
+where Kontinent = 'Африка')
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$
+where Kontinent = 'Африка' and KolNaz >
+(Select max(KolNaz) from Tabl_Kontinent$
+where Kontinent = 'Южная Америка')
+
+if exists
+( Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$
+where Kontinent = 'Африка' and PL > 2000000)
+Select Nazvanie from Tabl_Kontinent$
+where Kontinent = 'Африка'
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$
+where Kontinent = 
+(Select Kontinent from Tabl_Kontinent$
+where Nazvanie = 'Фиджи')
+
+Select Nazvanie, Stolica, PL, KolNaz, Kontinent
+from Tabl_Kontinent$
+where KolNaz = 
+(Select Nazvanie from Tabl_Kontinent$
+where KolNaz <= 
+(Select KolNaz from Tabl_Kontinent$
+where Nazvanie = 'Фиджи'))
+
+Select A.Kontinent, A.Nazvanie
+from Tabl_Kontinent$ A
+inner join 
+(Select Kontinent, min(PL) as Min_PL from Tabl_Kontinent$
+group by Kontinent) B on A.Kontinent = B.Kontinent and A.PL = B.Min_PL
+where A.KolNaz = 
+(Select max(KolNaz) from Tabl_Kontinent$
+where Kontinent = A.Kontinent)
+//=========================/Самостоятельная работа=======================
+
+//===========================/Запросы===========================

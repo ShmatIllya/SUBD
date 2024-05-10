@@ -1,0 +1,210 @@
+DECLARE @a INT, @b INT, @c INT
+SET @a = 5
+SET @b = 10
+SET @c = @a + @b
+PRINT @c
+
+declare @licey float, @gimn float, @diff float
+set @licey = (Select max(ball) from Test_uch1
+where ush = 'лицей')
+set @gimn = (Select max(ball) from Test_uch1
+where ush = 'гимназия')
+set @diff = abs(@licey - @gimn)
+print @diff
+
+declare @maxp float, @minp float, @diff float
+Select
+@maxp = max(ball),
+@minp = min(ball)
+from Test_uch1 Set @diff = @maxp - @minp
+Print @diff
+
+declare @a1 int, @b1 int
+set @a1 = rand()*1000
+set @b1 = square(@a1)
+print @a1
+print @b1
+
+declare @a2 int = rand()*100, @b2 int = rand()*100
+if @a2 > @b2
+print '@a2 = ' + cast(@a2 as varchar(3))
+else
+print '@b2 = ' + cast(@b2 as varchar(3))
+
+declare @a3 int = rand()*100
+if @a3 % 3 = 0
+print cast(@a3 as varchar(3)) + ' делится на 3'
+else
+print cast(@a3 as varchar(3)) + ' не делится на 3'
+
+declare @a4 int = rand() * 1000
+while @a4 % 5 = 0
+set @a4 = @a4 / 5
+if @a4 = 1
+print 'Yes'
+else
+print 'No'
+
+declare @a5 int = rand() * 1000, @b5 int = rand() * 1000
+print '@a5 = ' + cast(@a5 as varchar(4))
+print '@a5 = ' + cast(@b5 as varchar(4))
+while @a5 != @b5
+begin
+if @a5 > @b5
+set @a5 = @a5 - @b5 else
+set @b5 = @b5 - @a5
+end
+print 'НОД = ' + cast(@a5 as varchar(4))
+
+declare @a6 int = 5, @b6 int = 10, @s int = 0
+while @a6 <= @b6
+begin
+set @s = @s + @a6
+set @a6 = @a6 + 1
+end
+print 'Сумма = ' + cast(@s as varchar(5))
+
+declare @N int = rand() * 10, @M int = 1, @S1 int = 0
+while @M <= 2 * @N - 1
+begin
+set @S1 = @S1 + @M
+print @S1
+set @M = @M + 2
+end
+
+declare @a7 int = rand()*5, @c7 int = 1
+declare @b7 int = @a7 + rand()*5
+print '@a7 = ' + cast(@a7 as char(1)) + ', @b7 = ' + cast(@b7 as char(1))
+while @a7 <= @b7
+begin
+print replicate (@a7, @c7)
+set @a7 = @a7 + 1
+set @c7 = @c7 + 1
+end
+
+declare @a8 int = 10
+while @a8 < 100
+begin
+if (@a8 % 4 = 0) and (@a8 % 6 != 0)
+print @a8
+set @a8 = @a8 + 1
+end
+
+declare @d int = 31, @m int = 12
+set @d = case
+when @m in (1, 3, 5, 7, 8, 10, 12) and @d = 31 then 1
+when @m in (4, 6, 9, 11) and @d = 29 then 1
+when @m = 2 and @d = 29 then 1
+else @d + 1
+end
+set @m = case
+when @d = 1 and @m = 12 then 1
+when @d = 1 and @m < 12 then @m + 1
+else @m
+end
+print cast(@d as varchar(2)) + '/' + cast(@m as varchar(2))
+
+declare @l int, @n1 char(13) = 'Нижневартовск'
+set @l = len(@n1)
+while @l > 0
+begin
+print @n1
+set @l = @l - 1
+end
+
+declare @l2 int, @m2 int, @n2 char(13)
+set @n2 = 'Нижневартовск'
+set @l2 = len(@n2)
+set @m2 = @l2
+while @l2 > 0
+begin
+print left(@n2, @l2) + space(2 * (@m2 - @l2)) + right(reverse(@n2), @l2) set @l2 = @l2 - 1
+end
+set @l2 = 2
+while @l2 <= @m2
+begin
+print left(@n2, @l2) + space(2 * (@m2 - @l2)) + right(reverse(@n2), @l2) set @l2 = @l2 -1
+end
+set @l2 = 2
+while @l2 <= @m2
+begin
+print left(@n2, @l2) + space(2 * (@m2 - @l2)) + right(reverse(@n2), @l2)
+set @l2 = @l2 + 1
+end
+
+//==============================Самостоятельная=============================
+declare @a int = 5, @b int = 10
+select @a * @b as Произведение;
+
+select
+(select avg(ball) from Test_uch1 where ush = 'лицей') - (select avg(ball) from Test_uch1 where ush = 'гимназия') as Разница;
+
+select
+case 
+when count(*) % 2 = 0 then 'Четное'
+else 'Нечетное'
+end as 'Количество строк в таблице',
+count(*) as 'Количество строк'
+from Test_uch1;
+
+declare @number int = 9999;
+select @number as 'Число', (@number / 1000) + (@number %1000 / 100) + (@number % 100 / 10) + (@number % 10) as Результат;
+
+declare @q int = 5, @w int = 10, @e int = 3
+select
+min(val) as [Наименьшее значение]
+from (values (@q), (@w), (@e)) as ValueTable(val)
+
+declare @r int = 22
+select @r as Число, case
+when @r % 11 = 0 then 'Да'
+else 'Нет'
+end as 'Делится на 11'
+
+declare @n int = 27
+select @n as Число, case
+when log(@n, 3) = floor(log(@n, 3)) then 'Да'
+else 'Нет'
+end as 'Степень числа 3?'
+
+declare @t int = 20, @y int = 15
+declare @t2 int = @t, @y2 int = @y
+declare @gcd int = (select @t % @y)
+while @gcd != 0
+begin
+set @t = @y
+set @y = @gcd
+set @gcd = @t % @y
+end
+set @gcd = @y
+select @t2 * @y2 / @gcd as 'НОК'
+
+declare @u int = 2, @i int = 18, @o int
+set @o = @u
+declare @result int = 0
+while @o <= @i
+begin
+set @result = @result + (@o * @o)
+set @o = @o + 1
+end
+select @u as u, @i as i, @result as [Сумма квадратов]
+
+declare @num int = 1
+while @num % 2 != 1 or @num % 3 != 1 or @num % 4 != 1 or @num % 5 != 1 or @num % 6 != 1 or @num % 7 != 0
+begin
+set @num = @num + 1
+end
+select @num as Результат
+
+declare @sername nvarchar(100);
+set @sername = 'Шмат'
+declare @letterCount int
+set @letterCount = len(@sername)
+declare @counter int
+set @counter = 1
+while @counter <= @letterCount
+begin
+select @sername as 'Фамилия'
+set @counter = @counter + 1
+end
+//=============================/Самостоятельная=============================

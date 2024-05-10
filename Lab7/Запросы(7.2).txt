@@ -1,0 +1,54 @@
+select FIO, len(FIO) as [Количество символов]
+From Student;
+
+select trim(FIO) as ФИО, Data, spez, godpost
+from Student
+
+select FIO, charindex('о', FIO) as [Позиция о]
+from Student
+
+select FIO, left(spez, 3) as [3 символа специальности]
+from Student
+
+select FIO, Data, Replace(spez, 'Математика', 'Прикладная математика'), godpost
+from Student
+
+select FIO, Data, UPPER(spez) as Специальность, godpost
+from Student
+
+select FIO, REVERSE(FIO) as [Обратная запись]
+from Student
+
+select ABS(COS(PI())) as [Косинус Пи],
+ABS(SIN(PI())) as [Синус Пи],
+ABS(TAN(PI())) as [Тангенс Пи],
+ABS(COT(PI())) as [Котангенс Пи]
+
+select Round(123.456, 3) as Окр3,
+Round(123.456, 2) as Окр2,
+Round(123.456, 1) as Окр1,
+Round(123.456, 0) as Окр0,
+Round(123.456, -1) as [Окр-1],
+Round(123.456, -2) as [Окр-2],
+Round(123.456, -3) as [Окр-3]
+
+select CEILING(123.456) as Больше,
+FLOOR(123.456) as Меньше
+
+select SQRT(25) as Корень,
+SQUARE(25) as Квадрат,
+POWER(25,3) as Куб
+
+select GETDATE()
+
+select DAY(GETDATE()) as День,
+MONTH(GETDATE()) as Месяц,
+YEAR(GETDATE()) as Год,
+DATEPART(HOUR, GETDATE()) as Час,
+DATEPART(MINUTE, GETDATE()) as Минута,
+DATEPART(SECOND, GETDATE()) as Секунда,
+DATEPART(QUARTER, GETDATE()) as Квартал,
+DATEPART(WEEK, GETDATE()) as Неделя,
+DATEPART(DAYOFYEAR, GETDATE()) as [День года],
+DATEPART(WEEKDAY, GETDATE()) as [День недели]
+

@@ -1,0 +1,293 @@
+
+Select e.[Вид топлива], d.[Название фирмы] From [Фирмы-производители] d
+inner join [Топливо] e on e.[Код фирмы-производителя] = d.[Код фирмы-производителя]
+
+Select e.[Дата продажи], e.[Количество топлива], d.[Карта-счет клиента] from Клиенты d
+inner join Заказы e on e.[Код клиента] = d.[Код клиента]
+where d.[Карта-счет клиента] = 1234
+
+Select e.[Вид топлива], d.[Дата продажи], d.[Количество топлива] From Топливо e
+left join Заказы d on d.[Код топлива] = e.[Код топлива]
+
+Select e.[Вид топлива], e.[Цена за литр], d.[Название фирмы], d.[Дата окончания действия цен] from Топливо e
+left join [Топливо_Фирмы-поставщики] c on c.[Код топлива] = e.[Код топлива]
+left join [Фирмы-поставщики] d on d.[Код фирмы-поставщика] = c.[Код фирмы-поставщика]
+
+Select e.[Код заправки], e.[Адрес заправки], e.[Телефон], d.[Название фирмы] from Заправки e
+right join [Фирмы-поставщики_заправки] c on c.[Код заправки] = e.[Код заправки]
+right join [Фирмы-поставщики] d on d.[Код фирмы-поставщика] = c.[Код фирмы-поставщика]
+order by e.[Код заправки]
+
+Select e.[Код заправки], e.[Адрес заправки], e.[Телефон], d.[Код заказа], d.[Дата продажи], d.[Количество топлива] from Заправки e
+right join Заказы d on d.[Код заправки] = e.[Код заправки]
+
+Select e.[Фамилия], e.[Имя], e.[Отчество], d.[Код заказа], d.[Дата продажи], d.[Количество топлива] from Клиенты e
+full outer join Заказы d on d.[Код клиента] = e.[Код клиента]
+
+Select e.[Вид топлива], d.[Код заказа], d.[Дата продажи], d.[Количество топлива] from Топливо e
+full outer join Заказы d on d.[Код топлива] = e.[Код топлива]
+
+Select e.[Название фирмы], d.[Вид топлива] from [Фирмы-производители] e
+cross join Топливо d
+
+Select e.[Название фирмы], d.[Вид топлива] from [Фирмы-поставщики] eS
+cross join Топливо d
+
+Select [Код заказа], [Дата продажи] from Заказы
+where [Количество топлива] > 12
+intersect
+Select e.[Код заказа], e.[Дата продажи] from Заказы e
+inner join Клиенты d on d.[Код клиента] = e.[Код клиента]
+where d.[Карта-счет клиента] = 1234
+
+Select [Вид топлива] from Топливо
+where [Цена за литр] > 1220
+intersect
+select e.[Вид топлива] from Топливо e
+inner join [Топливо_Фирмы-поставщики] c on c.[Код топлива] = e.[Код топлива]
+inner join [Фирмы-поставщики] d on d.[Код фирмы-поставщика] = c.[Код фирмы-поставщика]
+where d.[Название фирмы] = 'Фирма-поставщик 1'
+
+Select [Код заказа], [Дата продажи] from Заказы
+where [Количество топлива] > 12
+except
+Select e.[Код заказа], e.[Дата продажи] from Заказы e
+inner join Клиенты d on d.[Код клиента] = e.[Код клиента]
+where d.[Карта-счет клиента] = 1234
+
+Select [Вид топлива] from Топливо
+where [Цена за литр] > 1220
+except
+select e.[Вид топлива] from Топливо e
+inner join [Топливо_Фирмы-поставщики] c on c.[Код топлива] = e.[Код топлива]
+inner join [Фирмы-поставщики] d on d.[Код фирмы-поставщика] = c.[Код фирмы-поставщика]
+where d.[Название фирмы] = 'Фирма-поставщик 1'
+
+Select e.[Вид топлива], e.[Цена за литр], d.[Название фирмы] from Топливо e
+cross apply [Фирмы-производители] d
+
+Select e.[Код заказа], e.[Дата продажи], d.[Фамилия], d.[Имя] from Заказы e
+outer apply Клиенты d
+
+Select * from Топливо
+where [Цена за литр] > (Select AVG([Цена за литр]) from Топливо)
+
+Select e.* from Заказы e
+join Клиенты d on d.[Код клиента] = e.[Код клиента]
+where d.[Карта-счет клиента] in (1234, 1222, 1333)
+
+Select [Код заказа], [Дата продажи], [Количество топлива] from Заказы
+where [Количество топлива] > ANY (
+Select e.[Количество топлива] from Заказы e
+join Клиенты d on d.[Код клиента] = e.[Код клиента]
+where d.[Карта-счет клиента] = 1234)
+
+Select d.Фамилия, d.Имя from Заказы e
+join Клиенты d on d.[Код клиента] = e.[Код клиента]
+where EXISTS (Select 1 from Заказы where [Количество топлива] > 29)
+
+Select Concat([Фамилия], ' ', [Имя], ' ', [Отчество]) as ФИО from  Клиенты
+
+Select [Код клиента], [Телефон клиента] from Клиенты
+where [Фамилия] like 'С%'
+
+Select Upper([Название фирмы]) from  [Фирмы-производители]
+
+Select Len([Юридический адрес]) from [Фирмы-поставщики]
+
+Select d.[Фамилия], d.[Имя], Count(e.[Код заказа]) as [Число заказов] from Заказы e
+inner join Клиенты d on d.[Код клиента] = e.[Код клиента] 
+group by d.Фамилия, d.Имя
+
+Select [Вид топлива], Round([Цена за литр], 0) from Топливо
+
+Select AVG([Цена за литр]) as [Средняя цена топлива] from Топливо
+
+Select *, Datediff(day, '2023-06-13', [Дата окончания действия цен]) as Duration from [Фирмы-поставщики]
+where datediff(day, '2023-06-13', [Дата окончания действия цен]) > 30
+
+go
+Create view ClientOrderView as
+select e.[Фамилия] + ' ' +  e.[Имя] + ' ' + e.[Отчество] as FIO, d.[Дата продажи], d.[Количество топлива]
+from Клиенты e
+inner join Заказы d on d.[Код клиента] = e.[Код клиента]
+go
+Select * from ClientOrderView
+go
+
+go
+create view ClientImportantInfo as
+Select [Карта-счет клиента], [Телефон клиента] from Клиенты
+go
+Select * from ClientImportantInfo
+
+go
+create view ManufactFuel as
+Select e.[Название фирмы], d.[Вид топлива] from Топливо d
+inner join [Фирмы-производители] e on e.[Код фирмы-производителя] = d.[Код фирмы-производителя] 
+go
+Select * from ManufactFuel
+
+go
+create view SendFuel as
+Select e.[Название фирмы], d.[Вид топлива] from Топливо d
+inner join [Топливо_Фирмы-поставщики] c on c.[Код топлива] = d.[Код топлива]
+inner join [Фирмы-поставщики] e on e.[Код фирмы-поставщика] = c.[Код фирмы-поставщика] 
+go
+Select * from SendFuel
+
+go
+create view GasStationsSenders as
+Select e.[Название фирмы], d.[Код заправки], d.[Адрес заправки] from Заправки d
+inner join [Фирмы-поставщики_заправки] c on c.[Код заправки] = d.[Код заправки]
+inner join [Фирмы-поставщики] e on e.[Код фирмы-поставщика] = c.[Код фирмы-поставщика] 
+go
+Select * from GasStationsSenders
+
+declare @ClientsTable Table (ClientID int, ClientName nvarchar(100), Phone nvarchar(50));
+insert into @ClientsTable (ClientID, ClientName, Phone)
+select [Код клиента], [Фамилия] + ' ' + [Имя] + ' ' + [Отчество], [Телефон клиента] from Клиенты
+select * from @ClientsTable
+
+Create Table #LocalTempClient (ClientID int, ClientName nvarchar(100), Phone nvarchar(50));
+insert into #LocalTempClient (ClientID, ClientName, Phone)
+select [Код клиента], [Фамилия] + ' ' + [Имя] + ' ' + [Отчество], [Телефон клиента] from Клиенты
+select * from #LocalTempClient
+drop table #LocalTempClient
+
+Create Table ##GlobalTempClient (ClientID int, ClientName nvarchar(100), Phone nvarchar(50));
+insert into ##GlobalTempClient (ClientID, ClientName, Phone)
+select [Код клиента], [Фамилия] + ' ' + [Имя] + ' ' + [Отчество], [Телефон клиента] from Клиенты
+select * from ##GlobalTempClient
+drop table ##GlobalTempClient
+
+with ClientCTE as 
+(
+  Select [Код клиента], [Фамилия] + ' ' + [Имя] + ' ' + [Отчество] as ФИО, [Телефон клиента] from Клиенты
+)
+select ФИО, [Телефон клиента] from ClientCTE
+
+go
+create procedure GetOrdersByClients
+@ClientCode int
+as
+begin
+select e.[Код заказа], e.[Дата продажи], e.[Количество топлива], d.[Фамилия] + ' ' + d.[Имя] from Заказы e
+inner join Клиенты d on d.[Код клиента] = e.[Код клиента]
+where d.[Код клиента] = @ClientCode;
+end
+go
+exec GetOrdersByClients @ClientCode = 1;
+
+go
+create procedure GetAvgFuelPrice
+@AvgPrice decimal output
+as
+begin
+select @AvgPrice = avg([Цена за литр])
+from Топливо
+end
+go
+declare @APrice decimal;
+exec GetAvgFuelPrice @AvgPrice = @APrice output
+select @APrice as AveragePrice
+
+go
+create function GetFullName (@ClientID int)
+returns nvarchar(100)
+as
+begin
+declare @FullName nvarchar(100)
+select @FullName = [Фамилия] + ' ' + [Имя] + ' ' + isnull([Отчество], '')
+from Клиенты
+where [Код клиента] = @ClientID
+return @FullName
+end
+go
+select dbo.GetFullName(1) as ФИО
+
+go
+create function GetClientOrders (@ClientID int)
+returns table
+as
+return
+select e.[Код заказа], e.[Дата продажи], e.[Количество топлива] from Заказы e
+inner join Клиенты d on d.[Код клиента] = e.[Код клиента]
+where d.[Код клиента] = @ClientID
+go
+select * from dbo.GetClientOrders(2);
+
+create table SendFirmAudit (
+Id int primary key Identity,
+FirmId int,
+OldDate date,
+NewDate date,
+UpdateDate datetime )
+go
+create trigger trg_AfterDateUpdate
+on [Фирмы-поставщики]
+after update
+as
+begin
+if (update([Дата окончания действия цен]))
+begin
+insert into SendFirmAudit (FirmId, OldDate, NewDate, UpdateDate)
+select e.[Код фирмы-поставщика], d.[Дата окончания действия цен], e.[Дата окончания действия цен], getdate()
+from inserted e
+inner join deleted d on d.[Код фирмы-поставщика] = e.[Код фирмы-поставщика]
+end
+end
+go
+Select * from SendFirmAudit
+update [Фирмы-поставщики] set [Дата окончания действия цен] = '2023-11-11'
+where [Код фирмы-поставщика] = 1
+select * from SendFirmAudit
+
+go 
+create trigger trg_InseteadOfDeleteSendFirm
+on [Фирмы-поставщики]
+instead of Delete
+as
+begin
+declare @SendFirmId int
+select @SendFirmId = [Код фирмы-поставщика] from deleted
+if not exists (select * from [Фирмы-поставщики_заправки] e where e.[Код фирмы-поставщика] = @SendFirmId)
+begin
+delete from [Фирмы-поставщики] where [Код фирмы-поставщика] = @SendFirmId
+end
+else
+begin
+RaisError('Невозможно удалить фирму, так как с она попрежнему поставляет топливо на заправки', 16, 1)
+end
+end
+go
+Delete from [Фирмы-поставщики] where [Код фирмы-поставщика] = 1
+
+Select e.[Код топлива], e.[Цена за литр] from Топливо e
+UNION
+Select [Код заказа], [Количество топлива] from Заказы
+
+Select e.[Код заказа], e.[Количество топлива] from Заказы e
+Union
+Select [Карта-счет клиента], [Код клиента] from Клиенты
+
+Select [Код заказа], [Дата продажи], [Количество топлива] from Заказы
+where [Количество топлива] > ANY (
+Select e.[Количество топлива] from Заказы e
+join Клиенты d on d.[Код клиента] = e.[Код клиента]
+where d.[Карта-счет клиента] = 1234)
+
+Select [Код заказа], [Дата продажи], [Количество топлива] from Заказы
+where [Количество топлива] > ALL (
+Select e.[Количество топлива] from Заказы e
+join Клиенты d on d.[Код клиента] = e.[Код клиента]
+where d.[Карта-счет клиента] = 1234)
+
+Select REPLICATE([Имя], 3) as ReplicatedName
+From Клиенты
+
+With [Обобщенные клиенты] ([Обобщенное Имя], [Обобщенная Фамилия]) as (
+Select e.[Имя], e.[Фамилия] from Клиенты e
+inner join Заказы d on d.[Код клиента] = e.[Код клиента] 
+where d.[Количество топлива] > 15)
+Select * from [Обобщенные клиенты]

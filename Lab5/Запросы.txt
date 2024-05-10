@@ -1,0 +1,380 @@
+//====================Добавление данных=====================
+create table Fakultet
+(Id int Primary key Identity,
+ABfak nvarchar(10),
+NFak nvarchar(50)
+);
+insert into Fakultet
+values
+('ГН', 'Гуманитарные Науки'),
+('Ен', 'Естественные Науки'),
+('ИТ', 'Информационные технологии'),
+('Фм', 'Физико Математический')
+
+create table Kafedra
+(Id int Primary key Identity,
+ShifrKaf nvarchar(10),
+NKaf nvarchar(50),
+AbFak_Kaf nvarchar(10)
+);
+insert into Kafedra
+values
+('вм', 'Высшая Математика', 'ен'),
+('ис', 'Информационные Системы', 'ит'),
+('мм', 'Математическое Моделирование', 'фм'),
+('оф', 'Общая Физика', 'ен'),
+('пи', 'Прикладная Математика', 'ит'),
+('эф', 'Экспериментальная Физика', 'фм')
+
+create table Sotrudnik
+(Id int Primary key Identity,
+TabNom int,
+ShifrKaf_Sotr nvarchar(10),
+FIO nvarchar(30),
+Dolgn nvarchar(30),
+Zarplata money,
+TabNom_ruk int
+);
+insert into Sotrudnik 
+values
+(101, 'пи', 'Прохоров', 'зав.кафедрой', 3500, 101),
+(102, 'пи', 'Семенов', 'преподаватель', 2500, 101),
+(105, 'пи', 'Петров', 'преподаватель', 2500, 101),
+(153, 'пи', 'Сидорова', 'инженер', 1500, 102),
+(201, 'ис', 'Андреев', 'зав.кафедрой', 3500, 201),
+(202, 'ис', 'Борисов', 'преподаватель', 2500, 201),
+(241, 'ис', 'Глухов', 'инженер', 2000, 201),
+(242, 'ис', 'Чернов', 'инженер', 1500, 202),
+(301, 'мм', 'Басов', 'зав.кафедрой', 3500, 301),
+(302, 'мм', 'Сергеева', 'преподаватель', 2500, 301),
+(401, 'оф', 'Волкла', 'зав.кафедрой', 3500, 401),
+(402, 'оф', 'Зайцев', 'преподаватель', 2500, 401),
+(403, 'оф', 'Смирнов', 'преподаватель', 1500, 401),
+(435, 'оф', 'Лисик', 'инженер', 2000, 402),
+(501, 'вм', 'Кузнецов', 'зав.кафедрой', 3500, 501),
+(502, 'вм', 'Романцев', 'преподаватель', 2500, 501),
+(503, 'вм', 'Соловьев', 'преподаватель', 2500, 501),
+(601, 'эф', 'Зверев', 'зав.кафедрой', 3500, 601),
+(602, 'эф', 'Сорокина', 'преподаватель', 2500, 601),
+(614, 'эф', 'Григорьев', 'инженер', 2000, 602)
+
+create table Spezialn
+(Id int Primary key Identity,
+NSpez nvarchar(20),
+NaprSpez nvarchar(50),
+Shifr_Spez nvarchar(10)
+);
+insert into Spezialn
+values
+('01.03.04', 'Прикладная Математика', 'мм'),
+('09.03.02', 'Информационные системы и технологии', 'ис'),
+('14.03.02', 'Ядерная физика и технологии', 'иф'),
+('38.03.05', 'Бизнес информатика', 'ис'),
+('09.09.03', 'Прикладная информатика', 'пи')
+
+create table Predmet
+(Id int Primary key Identity,
+kod_pred int,
+Kol int,
+Predmet nvarchar(30),
+Ispolnitel_kaf nvarchar(10)
+);
+insert into Predmet
+values
+(101, 320, 'Математика', 'вм'),
+(102, 160, 'Информатека', 'пи'),
+(103, 160, 'Физика', 'оф'),
+(202, 120, 'База данных', 'ис'),
+(204, 160, 'Электронника', 'эф'),
+(205, 80, 'Программирование', 'пи'),
+(209, 80, 'Моделирование', 'мм')
+
+create table Zakaz
+(Id int Primary key Identity,
+N_Z nvarchar(10),
+Kod_Z int
+);
+insert into Zakaz 
+values
+('01.03.04', 101),
+('01.03.04', 205),
+('01.03.04', 209),
+('09.03.02', 101),
+('09.03.02', 102),
+('09.03.02', 103),
+('09.03.02', 202),
+('09.02.03', 205),
+('09.02.03', 209),
+('09.03.03', 101),
+('09.09.03', 102),
+('09.09.03', 103),
+('09.03.03', 205),
+('09.03.03', 202),
+('14.03.02', 101),
+('14.03.02', 102),
+('14.03.02', 103),
+('14.03.02', 204),
+('38.03.05', 101),
+('38.03.05', 103),
+('38.03.05', 202),
+('38.03.05', 209)
+
+create table ZavKaf
+(Id int Primary key Identity,
+TabNom_K int,
+St_K int
+);
+insert into ZavKaf
+values
+(101, 15),
+(201, 18),
+(301, 20),
+(401, 10),
+(501, 18),
+(601, 8)
+
+create table Ingener
+(Id int Primary key Identity,
+TabNom_IN int,
+Spez nvarchar(15)
+);
+insert into Ingener
+values
+(153, 'электронник'),
+(241, 'электронник'),
+(242, 'программист'),
+(435, 'электронник'),
+(614, 'программист')
+
+create table Prepodavatel
+(Id int Primary key Identity,
+TabNom_Pr int,
+Zvanie nvarchar(15), 
+Stepen nvarchar(15)
+);
+insert into Prepodavatel
+values
+(101, 'профессор', 'д.т.н.'),
+(102, 'доцент', 'к.ф.-м.н.'),
+(105, 'доцент', 'к.т.н.'),
+(201, 'профессор', 'д.ф.-м.н.'),
+(202, 'доцент', 'к.ф.-м.н.'),
+(301, 'профессор', 'д.т.н.'),
+(302, 'доцент', 'к.т.н.'),
+(401, 'профессор', 'д.т.н.'),
+(402, 'доцент', 'к.т.н.'),
+(403, 'ассистент', null),
+(501, 'профессор', 'д.ф.-м.н.'),
+(502, 'профессор', 'д.ф.-м.н.'),
+(503, 'доцент', 'к.ф.-м.н.'),
+(601, 'профессор', 'д.ф.-м.н.')
+
+create table Student
+(Id int Primary key Identity,
+Reg_Nom int,
+Nom_SpeZ_St nvarchar(10),
+Fio_stud nvarchar(30)
+);
+insert into Student
+values
+(10101, '09.03.03', 'Николаева'),
+(10102, '09.03.03', 'Иванов'),
+(10103, '09.03.03', 'Крюков'),
+(20101, '09.03.02', 'Андреев'),
+(20102, '09.03.02', 'Федоров'),
+(30101, '14.03.02', 'Бондаренко'),
+(30102, '14.03.02', 'Цветков'),
+(30103, '14.03.02', 'Петров'),
+(50101, '01.03.04', 'Сергеев'),
+(50102, '01.03.04', 'Кудрявцев'),
+(80101, '38.03.05', 'Макаров'),
+(80102, '38.03.05', 'Яковлев')
+
+create table Ozenka
+(Id int Primary key Identity,
+data date,
+Kod int,
+ReGNom int,
+Tab_Nom int,
+Auditoria nvarchar(10),
+Ozenk_a int
+);
+insert into Ozenka 
+values
+('2022-06-05', 102, 10101, 102, 'т505', 4),
+('2022-06-05', 102, 10102, 102, 'т505', 4),
+('2022-06-05', 202, 20101, 202, 'т506', 4),
+('2022-06-05', 202, 20102, 202, 'т506', 3),
+('2022-06-07', 102, 30101, 105, 'ф419', 3),
+('2022-06-07', 102, 30102, 101, 'т506', 4),
+('2022-06-07', 102, 80101, 1002, 'м425', 5),
+('2022-06-09', 205, 80102, 402, 'м424', 4),
+('2022-06-09', 209, 20101, 302, 'ф333', 3),
+('2022-06-10', 101, 10102, 501, 'т506', 4),
+('2022-06-10', 204, 30102, 601, 'ф349', 5),
+('2022-06-10', 209, 80101, 301, 'э105', 5),
+('2022-06-10', 209, 80102, 301, 'э105', 4),
+('2022-06-12', 101, 80101, 502, 'с324', 4),
+('2022-06-15', 101, 30101, 503, 'ф417', 4),
+('2022-06-15', 101, 50101, 501, 'ф201', 5),
+('2022-06-15', 101, 50102, 501, 'ф201', 3),
+('2022-06-15', 103, 10101, 403, 'ф414', 4),
+('2022-06-15', 102, 10101, 102, 'т505', 5)
+//====================/Добавление данных=====================
+
+
+//====================Запросы=====================
+Select F.Nfak As Fakultet,
+K.Nkaf as Kafedra from
+Fakultet F, Kafedra K where
+F.ABfak = K.AbFak_Kaf
+order by Fakultet, Kafedra
+
+Select
+F.Nfak as Fakultet,
+K.Nkaf as Kafedra from
+Fakultet F
+inner join Kafedra K on
+F.ABfak = K.AbFak_Kaf
+order by Fakultet, Kafedra
+
+Select
+F.Nfak as Fakultet,
+K.Nkaf as Kafedra from
+Fakultet F
+left outer join Kafedra K on
+F.Abfak = K.AbFak_Kaf
+order by Fakultet, Kafedra
+
+Select S.Fio_stud,
+P.NaprSpez,
+K.NKaf as Kafedra
+from Student S
+inner join Spezialn P on 
+S.Nom_SpeZ_St = P.NSpez
+inner join Kafedra K on
+P.Shifr_Spez = K.ShifrKaf
+
+Select S.FIO,
+S.Dolgn,
+S.Zarplata,
+P.FIO as Руководитель
+From Sotrudnik S
+Inner join Sotrudnik P on
+S.TabNom = P.TabNom_ruk
+
+Select S.Fio_stud
+From Student S
+inner join Ozenka O on S.Reg_Nom=O.RegNom
+group by S.Fio_stud
+
+select S.Fio_stud,
+Count (O.Ozenk_a) as [Количество экзаменов],
+Avg (O.Ozenk_a) as [Средний балл]
+From Student S
+inner join Ozenka O on S.Reg_Nom=O.RegNom
+group by S.Fio_stud
+
+Select S.FIO,
+S.Zarplata,
+Z.St_K
+from Sotrudnik S
+inner join ZavKaf Z on S.TabNom=Z.TabNom_K
+
+Select S.FIO,
+P.Stepen
+From Sotrudnik S
+inner join Prepodavatel P on S.TabNom=P.TabNom_Pr
+where
+P.Stepen in ('к.ф.-м.н.', 'д.ф.-м.н.')
+
+Select distinct
+PR.Predmet as Дисциплина,
+S.FIO, 
+S.Dolgn,
+P.Stepen,
+O.data,
+O.Auditoria
+from Ozenka O
+inner join Predmet PR on O.Kod=PR.kod_pred
+inner join Sotrudnik S on O.Tab_Nom=S.TabNom
+inner join Prepodavatel P on O.Tab_Nom=P.TabNom_Pr
+order by O.data
+
+Select S.fio,
+Count (O.data) as [Количество экзаменов]
+from Ozenka O
+inner join Sotrudnik S on O.Tab_Nom = S.TabNom
+group by S.fio
+
+Select S.Fio_stud
+From Student S
+left outer join Ozenka O on S.Reg_Nom=O.RegNom
+Where O.ReGNom is null
+
+//=======================Самостоятельная======================
+Select S.Fio_Stud, P.NaprSpez, K.NKaf as Kafedra from Student S
+inner join Spezialn P on S.Nom_SpeZ_St = P.NSpez
+inner join Kafedra K on P.Shifr_Spez = K.ShifrKaf
+where K.AbFak_Kaf = 'ит'
+
+Select S.TabNom, S.FIO,
+case 
+when P.Dolgn = 'зав.кафедрой' Then ''
+else S.FIO 
+end as 'Фамилия руководителя'
+from Sotrudnik S
+inner join Sotrudnik P on S.TabNom=P.TabNom_ruk
+
+Select S.Fio_stud
+from Student S
+inner join Ozenka O on S.Reg_Nom = O.ReGNom
+Group by S.Fio_stud
+Having count(O.ReGNom) >= 2
+
+Select S.FIO, S.Zarplata
+from Sotrudnik S
+inner join Ingener I
+on S.TabNom = I.TabNom_IN
+where S.Zarplata < 2000
+
+select distinct S.Fio_stud
+from Student S
+inner join Ozenka O on S.Reg_Nom = O.ReGNom
+Where O.Auditoria = 'т506'
+
+select S.Fio_stud,
+Count(O.Ozenk_a) as 'Кол-во экзаменов',
+Avg(O.Ozenk_a) as 'Средний балл'
+from Student S
+inner join Ozenka O on S.Reg_Nom = O.ReGNom
+group by S.Fio_stud, S.Fio_stud
+having avg(O.OzenK_a) >= 4
+
+select S.Fio, S.Zarplata, P.Stepen
+from
+Sotrudnik S
+inner join Prepodavatel P on S.TabNom=P.TabNom_Pr
+Where S.Dolgn='зав.кафедрой'
+
+select Pr.Predmet, S.FIO, S.Dolgn, P.Stepen, O.data, O.Auditoria
+from Ozenka O
+inner join Prepodavatel P on O.Tab_Nom = P.TabNom_Pr
+inner join Predmet PR on O.Kod = PR.kod_pred
+inner join Sotrudnik S on O.Tab_Nom = S.TabNom
+where O.data between '2022-06-05' and '2022-06-11'
+order by O.data
+
+select S.FIO,
+count(O.data) as 'Кол-во экзаменов'
+from Ozenka O
+inner join Sotrudnik S on O.Tab_Nom = S.TabNom
+group by S.FIO having count(O.data) > 2
+
+select S.FIO_stud
+From Student S
+left join Ozenka O on S.Reg_Nom = O.ReGNom and O.data = '2022-06-10'
+where O.ReGNom is null
+//======================/Самостоятельная======================
+
+//====================/Запросы=====================
